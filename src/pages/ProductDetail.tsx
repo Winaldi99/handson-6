@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "../utils/AxiosInstance";
 import { useNavigate, useParams } from "react-router-dom";
+import axios from "../utils/AxiosInstance";
 import { useEffect } from "react";
 
 interface ProductDetail {
@@ -50,12 +50,12 @@ interface DeletedProduct extends ProductDetail {
   deletedOn: string;
 }
 
-const fetchProductDetail = async (id: string | undefined) => {
-  return await axios.get<ProductDetail>(`product/${id}`);
+export const fetchProductDetail = async (id: string | undefined) => {
+  return await axios.get<ProductDetail>(`/product/${id}`);
 };
 
 const deleteProduct = async (id: string | undefined) => {
-  return axios.delete<DeletedProduct>(`product/${id}`);
+  return await axios.delete<DeletedProduct>(`product/${id}`);
 };
 
 const ProductDetailSkeleton = () => {
@@ -141,26 +141,26 @@ const ProductDetailSkeleton = () => {
     </div>
   );
 };
-
 const ProductDetail = () => {
   const { id } = useParams();
-  const getDetailProduct = useQuery({
+  const getProductDetail = useQuery({
     queryKey: ["productDetail", id],
-    queryFn: () => fetchProductDetail(id),
+    queryFn: () => fetchProductDetail(id)
   });
   const deleteProductMutation = useMutation({
-    mutationFn: () => deleteProduct(id),
+    mutationFn: () => deleteProduct(id)
   });
+  const product: ProductDetail | undefined = getProductDetail.data?.data;
   const navigate = useNavigate();
+
   useEffect(() => {
     if (deleteProductMutation.isSuccess) {
-      navigate("/product");
+      navigate("/product", { replace: true });
     }
   }, [deleteProductMutation.isSuccess]);
-  const product = getDetailProduct.data?.data;
   return (
     <div>
-      {getDetailProduct.isLoading || product == undefined ? (
+      {getProductDetail.isFetching || product === undefined ? (
         <ProductDetailSkeleton />
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative">
@@ -344,7 +344,7 @@ const ProductDetail = () => {
           <div className="absolute bottom-14 right-0 bg-white rounded-lg shadow-lg w-32 hidden group-focus-within:block">
             <button
               onClick={() => {
-                // navigate("edit");
+                navigate("edit");
               }}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
             >
@@ -354,7 +354,7 @@ const ProductDetail = () => {
               className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
               onClick={() => {
                 if (confirm("Are you sure want to delete this product ? ")) {
-                  // deleteProductMutation.mutate();
+                  deleteProductMutation.mutate();
                 }
               }}
             >
