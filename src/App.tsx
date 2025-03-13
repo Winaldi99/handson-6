@@ -16,6 +16,9 @@ import CommentEdit from "./pages/CommentsEdit";
 import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
+import Todo from "./pages/Todos";
+import TodosAdd from "./pages/TodosAdd";
+import TodosEdit from "./pages/TodosEdit";
 
 const queryClient = new QueryClient()
 
@@ -37,6 +40,9 @@ function App() {
 			<Route path="/comments" element={<Comments/>}/>
 			<Route path="comments/add"element={<CommentAdd/>} />
 			<Route path="comments/:id/edit" element={<CommentEdit/>}/>
+			<Route path="/todo" element={<Todo/>}/>
+			<Route path="/todo/add" element={<TodosAdd/>}/>
+			<Route path="/todo/:id/edit" element={<TodosEdit/>}/>
 			
 
 			
