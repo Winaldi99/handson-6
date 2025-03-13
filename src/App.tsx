@@ -6,6 +6,10 @@ import ProductDetail from "./pages/ProductDetail";
 import Post from "./pages/Post";
 import PostAdd from "./pages/PostAdd";
 import PostEdit from "./pages/PostEdit";
+import Recipes from "./pages/Recipes";
+import RecipesDetail from "./pages/RecipesDetails";
+import RecipesEdit from "./pages/RecipesEdit";
+import RecipesAdd from "./pages/RecipesAdd";
 import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
@@ -23,6 +27,10 @@ function App() {
 			<Route path="posts" element={<Post />} />
 			<Route path="posts/add" element={<PostAdd />} />
 			<Route path="posts/:id/edit" element={<PostEdit />} />
+			<Route path="recipes/:id/edit" element={<RecipesEdit/>}/>
+			<Route path="recipes" element={<Recipes />} />
+			<Route path="recipes/add" element={<RecipesAdd />} />
+			<Route path="recipes/:id" element={<RecipesDetail />} />
 
 			
 		</Route>
