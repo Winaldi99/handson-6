@@ -10,6 +10,9 @@ import Recipes from "./pages/Recipes";
 import RecipesDetail from "./pages/RecipesDetails";
 import RecipesEdit from "./pages/RecipesEdit";
 import RecipesAdd from "./pages/RecipesAdd";
+import Comments from "./pages/Comments";
+import CommentAdd from "./pages/CommentsAdd";
+import CommentEdit from "./pages/CommentsEdit";
 import Home from "./pages/Home";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
@@ -31,6 +34,10 @@ function App() {
 			<Route path="recipes" element={<Recipes />} />
 			<Route path="recipes/add" element={<RecipesAdd />} />
 			<Route path="recipes/:id" element={<RecipesDetail />} />
+			<Route path="/comments" element={<Comments/>}/>
+			<Route path="comments/add"element={<CommentAdd/>} />
+			<Route path="comments/:id/edit" element={<CommentEdit/>}/>
+			
 
 			
 		</Route>
