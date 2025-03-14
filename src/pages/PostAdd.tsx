@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 
+// Define the structure of a post
 interface postDat {
   title: string;
   body: string;
@@ -13,19 +14,24 @@ interface postDat {
   userId: number;
 }
 
+// Define the structure of reactions
 interface reactionType {
   likes: number;
   dislikes: number;
 }
 
+// Function to add a new post via API
 const addPost = async (data: postDat) => {
   return await axios.post('/posts/add', data);
 };
 
+// Define the PostAdd component
 const PostAdd = () => {
+  // Initialize mutation for adding a post
   const { mutate, isSuccess, isPending } = useMutation({ mutationFn: addPost });
   const navigate = useNavigate();
 
+  // Redirect to the posts page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate('/posts', { replace: true });
@@ -65,4 +71,4 @@ const PostAdd = () => {
   );
 };
 
-export default PostAdd;
+export default PostAdd; // Export the PostAdd component

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "../utils/AxiosInstance"
 import {useNavigate} from "react-router-dom";
 
+// Define the structure of a post
 interface postData {
   id: number,
   title: string,
@@ -12,33 +13,39 @@ interface postData {
   userId: number
 }
 
+// Define the structure of reactions
 interface reactionType {
   likes: number,
   dislikes: number
 }
 
+// Define the structure of the response containing multiple posts
 interface postList {
   posts: postData[]
 }
 
+// Function to fetch posts from the API
 const fetchPostData = async () => {
   return await axios.get<postList>("/post");
 }
 
+// Define the structure of a deleted post
 interface DeletedPost extends postData {
   isDeleted: Boolean;
   deletedOn: string;
 }
 
+// Function to delete a post by its ID
 const deletePost = async (id: string | undefined) => {
   return await axios.delete<DeletedPost>(`post/${id}`);
 };
 
+// Component to display a single post card
 const PostCard : React.FC<postData> = (post : postData) =>{
   const deletePostMutation = useMutation({
-    mutationFn: (id : string) => deletePost(id)
+    mutationFn: (id : string) => deletePost(id) // Mutation function to delete a post
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
   return(
     <div className="bg-white shadow-lg rounded-xl overflow-hidden transform transition-all hover:shadow-xl">
       <div className="p-6">
@@ -130,6 +137,7 @@ const PostCard : React.FC<postData> = (post : postData) =>{
   );
 }
 
+// Skeleton loader for posts
 const PostSkeleton = () => {
   return (
     <div className="bg-white shadow-lg rounded-xl overflow-hidden">
@@ -167,9 +175,10 @@ const PostSkeleton = () => {
   );
 }
 
+// Main Post component
 const Post = () => {
-  const getPostData = useQuery({ queryKey: ["postDat"], queryFn: fetchPostData });
-  const navigate = useNavigate();
+  const getPostData = useQuery({ queryKey: ["postDat"], queryFn: fetchPostData }); // Fetch posts using React Query
+  const navigate = useNavigate(); // Hook for navigation
   
   return (
     <div className="bg-gray-100 min-h-screen py-8">
@@ -201,4 +210,4 @@ const Post = () => {
   );
 }
 
-export default Post;
+export default Post; // Export the Post component

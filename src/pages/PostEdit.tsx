@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 
+// Define the structure of a post
 interface postDat {
   title: string;
   body: string;
@@ -13,31 +14,40 @@ interface postDat {
   userId: number;
 }
 
+// Define the structure of reactions
 interface reactionType {
   likes: number;
   dislikes: number;
 }
 
+// Function to fetch the details of a specific post by its ID
 export const fetchPostDetail = async (id: string | undefined) => {
   return await axios.get<postDat>(`/post/${id}`);
 };
 
+// Function to update a post via API
 const editPost = async (data: postDat, id: string | undefined) => {
   return await axios.put(`/posts/${id}`, data);
 };
 
+// Define the PostEdit component
 const PostEdit = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // Get the post ID from the URL parameters
+
+  // Initialize mutation for updating the post
   const { mutate, isSuccess, isPending } = useMutation({
-    mutationFn: (data: postDat) => editPost(data, id),
+    mutationFn: (data: postDat) => editPost(data, id), // Mutation function to handle the update
   });
 
+  // Fetch the post data using React Query
   const getPostData = useQuery({
     queryKey: ['postDatDetail', id],
     queryFn: () => fetchPostDetail(id),
   });
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Redirect to the posts page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate('/posts', { replace: true });
@@ -59,4 +69,4 @@ const PostEdit = () => {
   );
 };
 
-export default PostEdit;
+export default PostEdit; // Export the PostEdit component

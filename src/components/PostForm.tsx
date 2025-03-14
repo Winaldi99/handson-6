@@ -3,6 +3,7 @@ import { UseMutateFunction } from '@tanstack/react-query';
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form';
 
+// Define the structure of the form fields
 interface postFormFields {
   title: string;
   body: string;
@@ -12,6 +13,7 @@ interface postFormFields {
   userId: number;
 }
 
+// Define the structure of a post
 interface postData {
   title: string;
   body: string;
@@ -21,17 +23,20 @@ interface postData {
   userId: number;
 }
 
+// Define the structure of reactions
 interface reactionType {
   likes: number,
   dislikes: number
 }
 
+// Define the props for the PostForm component
 interface PostFormElementProps {
   isEdit: boolean;
   mutateFn: UseMutateFunction<any, Error, postData, unknown>;
   defaultInputData?: postData;
 }
 
+// Function to convert an array of strings to a single string with each element on a new line
 const ArrStringToTextLine = (arrString: string[]) => {
   let formattedString: string = "";
   for (let i = 0; i < arrString.length; i++) {
@@ -43,6 +48,7 @@ const ArrStringToTextLine = (arrString: string[]) => {
   return formattedString;
 }
 
+// Function to convert a single string with newlines into an array of strings
 const TextLineToArrString = (TextLine: string) => {
   const arrStrings: string[] = [];
   let temp: string = "";
@@ -58,6 +64,7 @@ const TextLineToArrString = (TextLine: string) => {
   return arrStrings;
 }
 
+// Function to reformat form fields into the postData structure
 const reformatPostFormFields = (postFieldsData: postFormFields) => {
   console.log(postFieldsData.tags);
   const reformatedPostDat: postData = {
@@ -69,12 +76,14 @@ const reformatPostFormFields = (postFieldsData: postFormFields) => {
     userId: postFieldsData.userId
   }
 
-  return reformatedPostDat;
+  return reformatedPostDat; // Return the reformatted data
 }
 
+// Define the PostForm component
 const PostForm: React.FC<PostFormElementProps> = (props) => {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<postFormFields>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<postFormFields>(); // Initialize React Hook Form
 
+  // Populate form fields with default data when in edit mode
   useEffect(() => {
     if (props.defaultInputData) {
       setValue("title", props.defaultInputData.title);
@@ -84,6 +93,7 @@ const PostForm: React.FC<PostFormElementProps> = (props) => {
     }
   }, [props.defaultInputData]);
 
+  // Handle form submission
   const submitHandler = (data: postFormFields) => {
     if (props.isEdit) {
       if (!confirm("Are you sure want to update post data?")) return;
@@ -106,9 +116,9 @@ const PostForm: React.FC<PostFormElementProps> = (props) => {
       data.views = 1;
     }
 
-    const reformatedPostDat = reformatPostFormFields(data);
+    const reformatedPostDat = reformatPostFormFields(data); // Reformat the data
     console.log(reformatedPostDat);
-    props.mutateFn(reformatedPostDat);
+    props.mutateFn(reformatedPostDat); // Call the mutation function
   }
 
   return (
@@ -210,4 +220,4 @@ const PostForm: React.FC<PostFormElementProps> = (props) => {
   );
 }
 
-export default PostForm;
+export default PostForm; // Export the PostForm component
