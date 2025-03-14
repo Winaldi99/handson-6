@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import CommentFrom from '../components/CommentForm';
 
+// Define the structure of a comment
 interface Comment {
   body: string,
   postId: number,
@@ -12,16 +13,20 @@ interface Comment {
   }
 }
 
+// Function to add a new comment via API
 const CommentAdd = async (data: Comment) => {
   return await axios.post("comments/add", data);
 }
 
+// Define the AddComment component
 const AddComment = () => {
+  // Initialize mutation for adding a comment
   const { mutate, isSuccess, isPending } = useMutation({
-    mutationFn: CommentAdd
+    mutationFn: CommentAdd // Function to handle the mutation
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Redirect to the comments page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate("/comments", { replace: true });
@@ -61,4 +66,4 @@ const AddComment = () => {
   );
 }
 
-export default AddComment
+export default AddComment // Export the AddComment component

@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from '../utils/AxiosInstance'
 import { useNavigate } from 'react-router-dom'
 
+// Define the structure of a single comment
 interface Comment {
     id: number,
     body: string,
@@ -14,23 +15,28 @@ interface Comment {
     }
 }
 
+// Define the structure of the response containing multiple comments
 interface Comments {
     comments: Comment[]
 }
 
+// Define the structure of a deleted comment
 interface DeletedComment extends Comment {
     isDeleted: Boolean;
     deletedOn: string;
 }
 
+// Function to fetch comments from the API
 const fetchCommentsDat = async () => {
     return axios.get<Comments>('/comments')
 }
 
+// Function to delete a comment by its ID
 const deleteComments = async (id: string | undefined) => {
     return await axios.delete<DeletedComment>(`comments/${id}`);
 };
 
+// Component to display a skeleton loader while comments are being fetched
 const CommentsSkeleton = () => {
     return (
         <div className='bg-slate-100 rounded-lg shadow-md p-4 mb-4'>
@@ -51,17 +57,20 @@ const CommentsSkeleton = () => {
     );
 }
 
+// Main component to display and manage comments
 const Comments = () => {
+    // Fetch comments using React Query
     const getCommentDat = useQuery({
         queryKey: ["comments"],
         queryFn: fetchCommentsDat
     });
 
+    // Mutation to delete a comment
     const deleteCommentDat = useMutation(
         { mutationFn: (id: string) => deleteComments(id) }
     )
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Hook for navigation
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white py-8">
@@ -143,4 +152,4 @@ const Comments = () => {
     )
 }
 
-export default Comments
+export default Comments // Export the Comments component

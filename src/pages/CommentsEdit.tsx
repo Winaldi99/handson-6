@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import CommentFrom from '../components/CommentForm';
 
+// Define the structure of a comment
 interface Comment {
   body: string,
   postId: number,
@@ -12,28 +13,34 @@ interface Comment {
   }
 }
 
+// Function to update a comment via API
 const CommentEdit = async (data: Comment, id: string | undefined) => {
   return await axios.put(`comments/${id}`, data);
 }
 
+// Function to fetch a specific comment by its ID
 const fetchCommentDat = (id: string | undefined) => {
   return axios.get<Comment>(`/comments/${id}`);
 }
 
+// Define the EditComment component
 const EditComment = () => {
   const { id } = useParams();
   
+  // Fetch the comment data using React Query
   const getTodoDat = useQuery({
     queryKey: ["CommentDat", id],
     queryFn: () => fetchCommentDat(id)
   });
 
+  // Initialize mutation for updating the comment
   const { mutate, isSuccess, isPending } = useMutation({
     mutationFn: (data: Comment) => CommentEdit(data, id)
   });
   
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
   
+  // Redirect to the comments page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate("/comments", { replace: true });
@@ -55,4 +62,4 @@ const EditComment = () => {
   );
 }
 
-export default EditComment
+export default EditComment // Export the EditComment component

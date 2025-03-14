@@ -2,6 +2,7 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+// Define the structure of a comment
 interface Comment {
   body: string,
   postId: number,
@@ -10,21 +11,25 @@ interface Comment {
   }
 }
 
+// Define the structure of the comment form fields
 interface CommentFormFields {
   body: string,
   postId: number,
   userId: number
 }
 
+// Define the props for the CommentForm component
 interface CommentFormProps {
   isEdit: boolean;
   mutateFn: UseMutateFunction<any, Error, Comment, unknown>;
   defaultInputData?: Comment;
 }
 
+// Define the CommentForm component
 const CommentFrom: React.FC<CommentFormProps> = (props) => {
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<CommentFormFields>();
 
+  // Populate form fields with default data when in edit mode
   useEffect(() => {
     if (props.defaultInputData) {
       setValue("userId", props.defaultInputData.user.id);
@@ -33,11 +38,13 @@ const CommentFrom: React.FC<CommentFormProps> = (props) => {
     }
   }, [props.defaultInputData]);
 
+  // Hande form submission
   const submitHandler = (data: CommentFormFields) => {
     if (props.isEdit) {
       if (!confirm("Are you sure want to update comment data?")) return;
     }
 
+    // Create a new comment object
     const newComment: Comment = {
       body: data.body,
       postId: data.postId,
@@ -45,7 +52,7 @@ const CommentFrom: React.FC<CommentFormProps> = (props) => {
         id: data.userId
       }
     }
-    props.mutateFn(newComment);
+    props.mutateFn(newComment); // Call the mutation function with the new comment
   }
 
   return (
@@ -136,4 +143,4 @@ const CommentFrom: React.FC<CommentFormProps> = (props) => {
   );
 }
 
-export default CommentFrom
+export default CommentFrom // Export the CommentForm component
