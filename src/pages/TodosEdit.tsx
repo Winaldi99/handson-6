@@ -4,35 +4,41 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import TodoForm from '../components/TodoForm';
 
-
+// Define the structure of a Todo item
 interface Todo {
   todo : string,
   completed : boolean,
   userId : number
 }
 
+// Function to update a todo via API
 const TodoEdit = async (data: Todo, id: string | undefined) => {
   return await axios.put(`/todo/${id}`, data);
 };
 
+// Function to fetch the details of a specific todo by its ID
 const fetchTodoDat = (id: string | undefined) => {
   return axios.get<Todo>(`/todo/${id}`);
 }
 
+// Define the EditTodo component
 const EditTodo = () => {
   const { id } = useParams();
   
+  // Fetch the todo data using React Query
   const getTodoDat = useQuery({
     queryKey: ["TodoDat", id],
     queryFn: () => fetchTodoDat(id)
   });
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Initialize mutation for updating the todo
   const editTodoMutation = useMutation({
-    mutationFn: (data: Todo) => TodoEdit(data, id)
+    mutationFn: (data: Todo) => TodoEdit(data, id) // Mutation function to handle the update
   });
 
+  // Redirect to the todo list page when the mutation is successful
   useEffect(() => {
     if (editTodoMutation.isSuccess) {
       navigate("/todo", { replace: true });
@@ -54,4 +60,4 @@ const EditTodo = () => {
   );
 }
 
-export default EditTodo
+export default EditTodo; // Export the EditTodo component

@@ -4,24 +4,27 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import TodoForm from '../components/TodoForm';
 
-
+// Define the structure of a Todo item
 interface Todo {
   todo : string,
   completed : boolean,
   userId : number
 }
 
-
+// Function to add a new todo via API
 const TodoAdd = async (data : Todo) =>{
   return await axios.post("/todo/add", data);
 }
 
+// Define the AddTodo component
 const AddTodo = () => {
+  // Initialize mutation for adding a todo
   const { mutate, isSuccess, isPending } = useMutation({
-    mutationFn: TodoAdd
+    mutationFn: TodoAdd // Function to handle the mutation
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Redirect to the todo list page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate("/todo", { replace: true });
@@ -61,4 +64,4 @@ const AddTodo = () => {
   );
 }
 
-export default AddTodo
+export default AddTodo; // Export the AddTodo component

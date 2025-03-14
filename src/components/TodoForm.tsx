@@ -2,26 +2,31 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+// Define the structure of a Todo item
 interface Todo{
     todo : string;
     completed: boolean;
     userId : number;
 }
 
+// Define the structure of the form fields
 interface TodoFormFields{
     todo : string
     userId: number;
 }
 
+// Define the props for the TodoForm component
 interface TodoFormElementProps{
     isEdit: boolean;
     mutateFn: UseMutateFunction<any, Error, Todo, unknown>;
     defaultInputData?: Todo;
 }
 
+// Define the TodoForm component
 const TodoForm : React.FC<TodoFormElementProps> = (props) => {
     const {register, handleSubmit, setValue, formState : {errors}} = useForm<TodoFormFields>()
 
+    // Populate form fields with default data when in edit mode
     useEffect(() => {
       if (props.defaultInputData) {
         setValue("todo", props.defaultInputData.todo);
@@ -29,18 +34,20 @@ const TodoForm : React.FC<TodoFormElementProps> = (props) => {
       }
     }, [props.defaultInputData]);
 
+    // Handle form submission
     const submitHandler = (data : TodoFormFields) => {
         if (props.isEdit) {
-            if (!confirm("Are you sure want to update todo data?")) return;
+            if (!confirm("Are you sure want to update todo data?")) return; // Confirm before updating
         }
 
+        // Create a new Todo object
         const newTodoDat : Todo = {
             todo : data.todo,
             userId : data.userId,
             completed : false
         }
 
-        props.mutateFn(newTodoDat);
+        props.mutateFn(newTodoDat); // Call the mutation function with the new Todo object
     }
 
     return (
@@ -108,4 +115,4 @@ const TodoForm : React.FC<TodoFormElementProps> = (props) => {
     );
 }
 
-export default TodoForm
+export default TodoForm; // Export the TodoForm component

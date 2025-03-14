@@ -3,6 +3,7 @@ import axios from '../utils/AxiosInstance'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
+// Define the structure of a single todo item
 interface Todo {
     id: number,
     todo: string,
@@ -10,23 +11,28 @@ interface Todo {
     userId: number
 }
 
+// Define the structure of the response containing multiple todos
 interface TodoList {
     todos: Todo[] 
 }
 
+// Define the structure of a deleted todo
 interface DeletedTodo extends Todo {
     isDeleted: Boolean;
     deletedOn: string;
 }
 
+// Function to fetch the list of todos from the API
 const fetchTodoList = async () => {
     return axios.get<TodoList>('/todo')
 }
 
+// Function to delete a todo by its ID
 const deleteTodo = async (id: string | undefined) => {
     return await axios.delete<DeletedTodo>(`todo/${id}`);
 };
 
+// Component to display a skeleton loader while todos are being fetched
 const TodoSkeleton = () => {
     return (
         <div className="mb-4 p-4 border border-gray-200 rounded-lg shadow-sm">
@@ -45,25 +51,29 @@ const TodoSkeleton = () => {
     )
 }
 
+// Main Todo component
 const Todo = () => {
-    const [activeMenu, setActiveMenu] = useState<number | null>(null);
+    const [activeMenu, setActiveMenu] = useState<number | null>(null); // State to track the active menu for a todo
     
+    // Fetch the list of todos using React Query
     const getTodoList = useQuery({
         queryKey: ["Todo"],
         queryFn: fetchTodoList
     });
 
+    // Initialize mutation for deleting a todo
     const deleteTodoMutation = useMutation(
         {
-            mutationFn: (id: string) => deleteTodo(id),
+            mutationFn: (id: string) => deleteTodo(id), // Function to delete a todo
             onSuccess: () => {
-                getTodoList.refetch();
+                getTodoList.refetch(); // Refetch the todo list after successful deletion
             }
         }
     )
 
-    const navigate = useNavigate();
-    
+    const navigate = useNavigate(); // Hook for navigation
+
+    // Toggle the visibility of the menu for a specific todo
     const toggleMenu = (todoId: number) => {
         if (activeMenu === todoId) {
             setActiveMenu(null);
@@ -74,7 +84,7 @@ const Todo = () => {
 
     // Close menu when clicking outside
     const handleClickOutside = () => {
-        setActiveMenu(null);
+        setActiveMenu(null); // Reset the active menu
     };
 
     return (
@@ -194,4 +204,4 @@ const Todo = () => {
     )
 }
 
-export default Todo
+export default Todo; // Export the Todo component
