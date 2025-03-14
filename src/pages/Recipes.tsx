@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "../utils/AxiosInstance";
 import { useNavigate } from "react-router-dom";
 
+// Define the structure of a single recipe
 interface Recipe {
   id: number;
   name: string;
@@ -10,10 +11,12 @@ interface Recipe {
   rating: number;
 }
 
+// Define the structure of the response containing multiple recipes
 interface RecipesList {
   recipes: Recipe[];
 }
 
+// Component to display a single recipe card
 const RecipeCard: React.FC<Recipe> = (recipe: Recipe) => {
   return (
     <div className="group relative overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:shadow-xl bg-white">
@@ -49,10 +52,12 @@ const RecipeCard: React.FC<Recipe> = (recipe: Recipe) => {
   );
 }
 
+// Function to fetch the list of recipes from the API
 const fetchRecipesList = async () => {
   return await axios.get<RecipesList>("/recipes");
 }
 
+// Component to display a skeleton loader while recipes are being fetched
 const RecipesSkeleton = () => {
   return (
     <div className="group relative overflow-hidden rounded-lg shadow-md bg-white">
@@ -73,6 +78,7 @@ const RecipesSkeleton = () => {
   );
 }
 
+// Main Recipes component
 const Recipes = () => {
   const getRecipesList = useQuery({ queryKey: ["recipeList"], queryFn: fetchRecipesList })
   const navigate = useNavigate();
@@ -116,4 +122,4 @@ const Recipes = () => {
   )
 }
 
-export default Recipes;
+export default Recipes; // Export the Recipes component

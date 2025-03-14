@@ -5,23 +5,29 @@ import axios from "../utils/AxiosInstance";
 import RecipeForm, { Recipe } from "../components/RecipesForm";
 import { fetchRecipeDetail } from "./RecipesDetails";
 
+// Function to edit a recipe via API
 const editRecipe = async (data: Recipe, id: string | undefined) => {
   return await axios.put(`/recipes/${id}`, data);
 };
 
+// Define the EditRecipes component
 const EditRecipes = () => {
   const { id } = useParams();
 
+  // Initialize mutation for editing a recipe
   const editRecipeMutation = useMutation({
     mutationFn: (data: Recipe) => editRecipe(data, id)
   });
 
+  // Fetch the details of the recipe to be edited using React Query
   const getRecipeDetail = useQuery({
     queryKey: ["recipeDetail", id],
     queryFn: () => fetchRecipeDetail(id)
   });
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Redirect to the recipes list page when the mutation is successful
   useEffect(() => {
     if (editRecipeMutation.isSuccess) {
       navigate("/recipes", { replace: true });
@@ -47,4 +53,4 @@ const EditRecipes = () => {
   );
 };
 
-export default EditRecipes;
+export default EditRecipes; // Export the EditRecipes component

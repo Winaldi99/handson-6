@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "../utils/AxiosInstance";
 import { useEffect } from "react";
 
+// Define the structure of a recipe's details
 interface RecipeDetails {
   id: number;
   name: string;
@@ -21,19 +22,23 @@ interface RecipeDetails {
   mealType: string[];
 }
 
+// Define the structure of a deleted recipe
 interface DeletedRecipe extends RecipeDetails {
   isDeleted: Boolean;
   deletedOn: string;
 }
 
+// Function to fetch the details of a specific recipe by its ID
 export const fetchRecipeDetail = async (id: string | undefined) => {
   return await axios.get<RecipeDetails>(`/recipes/${id}`);
 };
 
+// Function to delete a recipe by its ID
 const deleteRecipe = async (id: string | undefined) => {
   return await axios.delete<DeletedRecipe>(`recipes/${id}`);
 };
 
+// Component to display a skeleton loader while recipe details are being fetched
 const RecipeDetailSkeleton = () => {
   return (
     <div className="container mx-auto p-4 animate-pulse">
@@ -73,6 +78,7 @@ const RecipeDetailSkeleton = () => {
   );
 };
 
+// Component to display the recipe details
 const RecipeContent: React.FC<RecipeDetails> = (recipe: RecipeDetails) => {
   return (
     <div className="container mx-auto p-4">
@@ -174,22 +180,26 @@ const RecipeContent: React.FC<RecipeDetails> = (recipe: RecipeDetails) => {
   );
 };
 
+// Main Recipe Details component
 const RecipesDetail = () => {
   const { id } = useParams();
 
+  // Fetch the recipe details using React Query
   const getRecipeDetails = useQuery({
     queryKey: ["recipeDetail", id],
     queryFn: () => fetchRecipeDetail(id),
   });
 
+  // Initialize mutation for deleting the recipe
   const deleteRecipeMutation = useMutation({
     mutationFn: () => deleteRecipe(id),
   });
 
-  const recipe: RecipeDetails | undefined = getRecipeDetails.data?.data;
+  const recipe: RecipeDetails | undefined = getRecipeDetails.data?.data; // Extract recipe data
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
 
+  // Redirect to the recipes list page when the recipe is successfully deleted
   useEffect(() => {
     if (deleteRecipeMutation.isSuccess) {
       navigate("/recipes", { replace: true });
@@ -247,5 +257,4 @@ const RecipesDetail = () => {
   );
 };
 
-export default RecipesDetail;
-
+export default RecipesDetail; // Export the RecipesDetail component

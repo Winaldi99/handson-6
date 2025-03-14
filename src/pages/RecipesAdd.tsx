@@ -4,15 +4,20 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeForm, { Recipe } from "../components/RecipesForm";
 
+// Function to add a new recipe via API
 const addRecipe = async (data: Recipe) => {
   return await axios.post("/recipes/add", data);
 };
 
+// Define the AddRecipes component
 const AddRecipes = () => {
+  // Initialize mutation for adding a new recipe
   const { mutate, isSuccess, isPending } = useMutation({
-    mutationFn: addRecipe
+    mutationFn: addRecipe // Function to handle the mutation
   });
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook for navigation
+
+  // Redirect to the recipes list page when the mutation is successful
   useEffect(() => {
     if (isSuccess) {
       navigate("/recipes", { replace: true });
@@ -52,4 +57,4 @@ const AddRecipes = () => {
   );
 };
 
-export default AddRecipes;
+export default AddRecipes; // Export the AddRecipes component

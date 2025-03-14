@@ -3,12 +3,14 @@ import { UseMutateFunction } from "@tanstack/react-query";
 import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
+// Define the props for the RecipeForm component
 interface RecipeFormElementProps {
   isEdit: boolean;
   mutateFn: UseMutateFunction<any, Error, Recipe, unknown>;
   defaultInputData?: Recipe;
 }
 
+// Define the structure of the form fields
 export type RecipeFormFields = {
     name: string;
     ingredients: string;
@@ -24,6 +26,7 @@ export type RecipeFormFields = {
     mealType: string;
 };
 
+// Define the structure of a recipe
 export type Recipe = {
     name: string;
     ingredients: string[];
@@ -39,7 +42,8 @@ export type Recipe = {
     mealType: string[];
 };
 
-const ArrStringToTextLine = (arrString : string[]) =>{
+// Function to convert an array of strings to a single string with each element on a new line
+const ArrStringToTextLine = (arrString : string[]) => {
     let formattedString : string = "";
     for(let i = 0; i < arrString.length; i++){
         formattedString += arrString[i];
@@ -50,6 +54,7 @@ const ArrStringToTextLine = (arrString : string[]) =>{
     return formattedString;
 }
 
+// Function to convert a single string with newlines into an array of strings
 const TextLineToArrString = (TextLine : string) => {
     const arrStrings : string[] = [];
     let temp : string = "";
@@ -63,9 +68,10 @@ const TextLineToArrString = (TextLine : string) => {
         }
     }
     return arrStrings;
-}
+};
 
 
+// Function to reformat form fields into the Recipe structure
 const reformatTextFieldToObject = (formData : RecipeFormFields) => {
     const reformatedDat : Recipe = {
         name : formData.name,
@@ -85,9 +91,11 @@ const reformatTextFieldToObject = (formData : RecipeFormFields) => {
     return reformatedDat;
 }
 
-
+// Define the RecipeForm component
 const RecipeForm: React.FC<RecipeFormElementProps> = (props) => {
     const{register, handleSubmit, setValue, formState: {errors}} = useForm<RecipeFormFields>();
+
+    // Populate form fields with default data when in edit mode
     useEffect(() =>{
         if(props.defaultInputData){
             setValue("name", props.defaultInputData.name);
@@ -105,6 +113,7 @@ const RecipeForm: React.FC<RecipeFormElementProps> = (props) => {
         }
     }, [props.defaultInputData])
 
+    // Handle form submission
     const onSubmit: SubmitHandler<RecipeFormFields> = (data) => {
         if (props.isEdit) {
             if (!confirm("Are you sure want to update recipe data ? ")) {
@@ -112,9 +121,9 @@ const RecipeForm: React.FC<RecipeFormElementProps> = (props) => {
             }
         }
 
-        const reformatedDat = reformatTextFieldToObject(data);
+        const reformatedDat = reformatTextFieldToObject(data); // Reformat the data
         console.log(reformatedDat);
-        props.mutateFn(reformatedDat);
+        props.mutateFn(reformatedDat); // Call the mutation function
     };
 
     return (
@@ -339,4 +348,4 @@ const RecipeForm: React.FC<RecipeFormElementProps> = (props) => {
     );
 };
 
-export default RecipeForm;
+export default RecipeForm; // Export the RecipeForm component
